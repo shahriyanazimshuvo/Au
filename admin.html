@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Admin Dashboard | Department of Home Affairs</title>
+    
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* --- LOGIN PAGE STYLES --- */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 15px;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-top: 5px solid #ff9933;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header .gov-crest {
+            width: 60px;
+            height: 60px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 15px;
+        }
+        
+        .login-header h2 {
+            color: #1a1a1a;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .login-form label i {
+            margin-right: 8px;
+            color: #ff9933;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #ff9933;
+            box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #ff9933;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            background: #e68a00;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 153, 51, 0.3);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        /* --- CUSTOM POPUP/ALERT STYLES --- */
+        .custom-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .custom-popup {
+            background: white;
+            border-radius: 24px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            animation: popupAppear 0.3s ease-out;
+            overflow: hidden;
+        }
+        
+        @keyframes popupAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .popup-header {
+            padding: 25px 25px 15px;
+            text-align: center;
+        }
+        
+        .popup-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+        }
+        
+        .popup-icon.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .popup-icon.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .popup-icon.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .popup-icon.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .popup-icon.delete {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .popup-icon.upload {
+            background: #e3f2fd;
+            color: #00698f;
+        }
+        
+        .popup-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .popup-message {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            padding: 0 15px;
+        }
+        
+        .popup-details {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 20px;
+            border-radius: 16px;
+            text-align: left;
+            border-left: 4px solid #ff9933;
+        }
+        
+        .popup-details-item {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .popup-details-item .label {
+            width: 80px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .popup-details-item .value {
+            flex: 1;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 20px 25px 25px;
+        }
+        
+        .popup-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .popup-btn.confirm {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .popup-btn.confirm:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(220, 53, 69, 0.3);
+        }
+        
+        .popup-btn.cancel {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .popup-btn.cancel:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(108, 117, 125, 0.3);
+        }
+        
+        .popup-btn.ok {
+            background: #ff9933;
+            color: #1a1a1a;
+        }
+        
+        .popup-btn.ok:hover {
+            background: #e68a00;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 153, 51, 0.3);
+        }
+        
+        .popup-btn.upload {
+            background: #00698f;
+            color: white;
+        }
+        
+        .popup-btn.upload:hover {
+            background: #005070;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 105, 143, 0.3);
+        }
+        
+        /* --- FILE UPLOAD STYLES --- */
+        .file-upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            background: #fafafa;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 15px 20px;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #ff9933;
+            background: #fff3e0;
+        }
+        
+        .file-upload-area i {
+            font-size: 48px;
+            color: #ff9933;
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-area h4 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .file-upload-area p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .file-list {
+            margin: 15px 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ff9933;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .file-info i {
+            font-size: 20px;
+        }
+        
+        .file-info i.fa-file-pdf {
+            color: #dc3545;
+        }
+        
+        .file-info i.fa-file-image {
+            color: #28a745;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            font-size: 14px;
+            word-break: break-word;
+        }
+        
+        .file-size {
+            color: #666;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .file-remove {
+            color: #dc3545;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .file-remove:hover {
+            background: #fee;
+            border-radius: 4px;
+        }
+        
+        .upload-progress {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .upload-progress-bar {
+            height: 100%;
+            background: #ff9933;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .document-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 20px;
+        }
+        
+        .preview-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+            position: relative;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-item .preview-pdf {
+            width: 100%;
+            height: 100%;
+            background: #f8d7da;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #dc3545;
+        }
+        
+        /* --- MAIN APP STYLES --- */
+        #mainApp {
+            display: none;
+        }
+        
+        /* --- HEADER --- */
+        header {
+            background-color: #1a1a1a;
+            padding: 12px 15px;
+            border-bottom: 3px solid #ff9933;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .gov-crest-small {
+            width: 35px;
+            height: 35px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .dept-name h1 {
+            font-size: 16px;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .dept-name p {
+            font-size: 11px;
+            color: #ff9933;
+            font-weight: 400;
+        }
+        
+        .admin-badge {
+            background: #ff9933;
+            color: #1a1a1a;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        
+        /* --- NAVIGATION --- */
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            padding: 0 15px;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-left {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #333;
+            padding: 12px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-btn i {
+            margin-right: 6px;
+            font-size: 14px;
+        }
+        
+        .nav-btn:hover {
+            background-color: #f0f4f8;
+        }
+        
+        .nav-btn.active {
+            border-bottom: 3px solid #ff9933;
+            color: #000;
+            background-color: #fff3e0;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        
+        .logout-btn i {
+            margin-right: 5px;
+        }
+        
+        /* --- MAIN CONTENT --- */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        
+        /* --- DASHBOARD CARDS --- */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #ff9933;
+        }
+        
+        .stat-card h3 {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-number {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        
+        /* --- CARDS --- */
+        .card {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+            margin-bottom: 20px;
+        }
+        
+        .card.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 22px;
+            border-bottom: 2px solid #ff9933;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #ff9933;
+            font-size: 24px;
+        }
+        
+        p.subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        /* --- TABLE STYLES --- */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .admin-table th {
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .admin-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+        
+        .admin-table tbody tr:hover {
+            background: #fff9f0;
+        }
+        
+        .mobile-cards {
+            display: none;
+        }
+        
+        /* --- STATUS BADGES --- */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
+        .status-badge.received {
+            background: #2e7d32;
+            color: white;
+        }
+        
+        .status-badge.processing {
+            background: #b76e00;
+            color: white;
+        }
+        
+        .status-badge.approved {
+            background: #1e4d7c;
+            color: white;
+        }
+        
+        .status-badge.rejected {
+            background: #b71c1c;
+            color: white;
+        }
+        
+        /* --- ICONS & BUTTONS --- */
+        .document-icon {
+            color: #ff9933;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 3px;
+        }
+        
+        .document-icon:hover {
+            transform: scale(1.2);
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: #00698f;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0 5px;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .action-btn.delete {
+            color: #dc3545;
+        }
+        
+        .action-btn i {
+            margin-right: 3px;
+        }
+        
+        /* --- SEARCH & DETAILS --- */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 30px;
+            font-size: 14px;
+            -webkit-appearance: none;
+        }
+        
+        .filter-select {
+            width: 150px;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 30px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .details-panel {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .detail-item {
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border-left: 3px solid #ff9933;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .detail-item label {
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .detail-item .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            word-break: break-word;
+        }
+        
+        /* EDIT INPUT STYLES */
+        .edit-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: #999;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            margin-top: auto;
+        }
+        
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 25px 20px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px 10px;
+            }
+            
+            .stat-number {
+                font-size: 20px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .nav-left {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 5px;
+            }
+            
+            .nav-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+            
+            .nav-right {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 5px;
+            }
+            
+            .table-container {
+                display: none;
+            }
+            
+            .mobile-cards {
+                display: block;
+            }
+            
+            .mobile-card {
+                background: white;
+                border: 1px solid #eee;
+                border-radius: 16px;
+                padding: 16px;
+                margin-bottom: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+            
+            .mobile-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            
+            .mobile-card-header .trn {
+                font-weight: 700;
+                color: #00698f;
+                font-size: 15px;
+            }
+            
+            .mobile-card-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                font-size: 14px;
+                border-bottom: 1px dashed #f0f0f0;
+            }
+            
+            .mobile-card-row:last-child {
+                border-bottom: none;
+            }
+            
+            .mobile-card-row .label {
+                color: #666;
+                font-weight: 600;
+            }
+            
+            .mobile-card-row .value {
+                font-weight: 600;
+                color: #1a1a1a;
+            }
+            
+            .mobile-card-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 15px;
+                padding-top: 12px;
+                border-top: 2px solid #f0f0f0;
+                flex-wrap: wrap;
+            }
+            
+            .mobile-card-actions button {
+                flex: 1;
+                padding: 12px;
+                border: none;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                min-width: 70px;
+            }
+            
+            .mobile-edit {
+                background: #00698f;
+                color: white;
+            }
+            
+            .mobile-delete {
+                background: #dc3545;
+                color: white;
+            }
+            
+            .mobile-view {
+                background: #6c757d;
+                color: white;
+            }
+            
+            .mobile-upload {
+                background: #ff9933;
+                color: #1a1a1a;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .popup-buttons {
+                flex-direction: column;
+                padding: 15px 20px 20px;
+            }
+            
+            .popup-details {
+                margin: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-box {
+                padding: 20px 15px;
+            }
+            
+            .login-header h2 {
+                font-size: 20px;
+            }
+        }
+        
+        .sear {
+            height: 50px;
+            width: 320px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="gov-crest">🇦🇺</div>
+                <h2>Admin Login</h2>
+                <p>Department of Home Affairs</p>
+            </div>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Admin Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password" autofocus>
+                </div>
+                <button onclick="checkPassword()" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+            </div>
+            
+            <div class="login-footer">
+                <i class="fas fa-shield-alt"></i> Restricted Access - Authorized Personnel Only
+            </div>
+        </div>
+    </div>
+    
+    <!-- CUSTOM POPUPS -->
+    <div id="deletePopup" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="popup-header">
+                <div class="popup-icon delete"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="popup-title">Confirm Delete</div>
+                <div class="popup-message">Are you sure you want to delete this application?</div>
+            </div>
+            <div class="popup-details" id="deleteDetails"></div>
+            <div class="popup-buttons">
+                <button class="popup-btn confirm" onclick="confirmDelete()"><i class="fas fa-trash"></i> Yes, Delete</button>
+                <button class="popup-btn cancel" onclick="closePopup('deletePopup')"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="successPopup" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="popup-header">
+                <div class="popup-icon success"><i class="fas fa-check-circle"></i></div>
+                <div class="popup-title">Success!</div>
+                <div class="popup-message" id="successMessage">Operation completed successfully!</div>
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-btn ok" onclick="closePopup('successPopup')"><i class="fas fa-check"></i> OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="errorPopup" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="popup-header">
+                <div class="popup-icon error"><i class="fas fa-times-circle"></i></div>
+                <div class="popup-title">Error!</div>
+                <div class="popup-message" id="errorMessage">Something went wrong!</div>
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-btn ok" onclick="closePopup('errorPopup')"><i class="fas fa-check"></i> OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="infoPopup" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="popup-header">
+                <div class="popup-icon info"><i class="fas fa-info-circle"></i></div>
+                <div class="popup-title">Information</div>
+                <div class="popup-message" id="infoMessage"></div>
+            </div>
+            <div class="popup-details" id="infoDetails" style="display: none;"></div>
+            <div class="popup-buttons">
+                <button class="popup-btn ok" onclick="closePopup('infoPopup')"><i class="fas fa-check"></i> OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- UPLOAD DOCUMENTS POPUP -->
+    <div id="uploadPopup" class="custom-popup-overlay">
+        <div class="custom-popup" style="max-width: 500px;">
+            <div class="popup-header">
+                <div class="popup-icon upload"><i class="fas fa-cloud-upload-alt"></i></div>
+                <div class="popup-title">Upload Documents</div>
+                <div class="popup-message" id="uploadApplicantName"></div>
+            </div>
+            <div class="popup-details" style="margin:0 20px 15px;">
+                <div class="popup-details-item">
+                    <span class="label">TRN:</span>
+                    <span class="value" id="uploadTrn"></span>
+                </div>
+            </div>
+            <!-- File Upload Area -->
+            <div class="file-upload-area" onclick="document.getElementById('fileInput').click()" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h4>Click to Upload Files</h4>
+                <p>Supports PDF, JPG, PNG (Max 5MB each)</p>
+            </div>
+            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileSelect(event)">
+            
+            <!-- File List -->
+            <div class="file-list" id="fileList"></div>
+            
+            <!-- Upload Progress -->
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+            </div>
+            
+            <!-- Document Preview -->
+            <div class="document-preview" id="documentPreview"></div>
+            
+            <div class="popup-buttons">
+                <button class="popup-btn upload" onclick="saveUploadedFiles()"><i class="fas fa-save"></i> Save Documents</button>
+                <button class="popup-btn cancel" onclick="closePopup('uploadPopup')"><i class="fas fa-times"></i> Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MAIN ADMIN APP -->
+    <div id="mainApp">
+        
+        <header>
+            <div class="header-content">
+                <div class="logo-area">
+                    <div class="gov-crest-small">🇦🇺</div>
+                    <div class="dept-name">
+                        <h1>Department of Home Affairs</h1>
+                        <p>Administrator Dashboard</p>
+                    </div>
+                </div>
+                <div class="admin-badge"><i class="fas fa-user-shield"></i> Admin: Shahriya Nazim Shuvo</div>
+            </div>
+        </header>
+        
+        <nav>
+            <div class="nav-container">
+                <div class="nav-left">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></button>
+                    <button onclick="navigate('applications')" id="nav-applications" class="nav-btn"><i class="fas fa-file-alt"></i> <span>Applications</span></button>
+                    <button onclick="navigate('search')" id="nav-search" class="nav-btn"><i class="fas fa-search"></i> <span>Search</span></button>
+                    <button onclick="navigate('reports')" id="nav-reports" class="nav-btn"><i class="fas fa-chart-bar"></i> <span>Reports</span></button>
+                </div>
+                <div class="nav-right">
+                    <button class="logout-btn" onclick="showLogoutPopup()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </nav>
+        
+        <main>
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="card active">
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <p class="subtitle">Welcome back, John. Here's today's summary.</p>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3><i class="fas fa-folder-open"></i> Total</h3>
+                        <div class="stat-number" id="totalApps">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-clock"></i> Received</h3>
+                        <div class="stat-number" id="receivedApps">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-spinner"></i> Processing</h3>
+                        <div class="stat-number" id="processingApps">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-check-circle"></i> Approved</h3>
+                        <div class="stat-number" id="approvedApps">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-times-circle"></i> Rejected</h3>
+                        <div class="stat-number" id="rejectedApps">0</div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;">
+                    <h3 style="margin-bottom:15px;">Recent Applications</h3>
+                    <div class="table-container desktop-only">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>TRN</th>
+                                    <th>Name</th>
+                                    <th>Passport</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Documents</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mobile-cards" id="recentMobileCards"></div>
+                </div>
+            </section>
+            
+            <!-- ALL APPLICATIONS -->
+            <section id="applications" class="card">
+                <h2><i class="fas fa-file-alt"></i> All Applications</h2>
+                <p class="subtitle">Manage and update application statuses.</p>
+                <div class="search-box">
+                    <input type="text" id="appSearch" placeholder="Search by TRN, Name, or Passport..." onkeyup="filterApplications()">
+                    <select class="filter-select" id="statusFilter" onchange="filterApplications()">
+                        <option value="">All Status</option>
+                        <option value="RECEIVED">Received</option>
+                        <option value="PROCESSING">Processing</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="REJECTED">Rejected</option>
+                    </select>
+                </div>
+                <div class="table-container desktop-only">
+                    <table class="admin-table" id="applicationsTable">
+                        <thead>
+                            <tr>
+                                <th>TRN</th>
+                                <th>Name</th>
+                                <th>Passport</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Documents</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="mobile-cards" id="mobileCardsContainer"></div>
+            </section>
+            
+            <!-- SEARCH PAGE -->
+            <section id="search" class="card">
+                <h2><i class="fas fa-search"></i> Advanced Search</h2>
+                <p class="subtitle">Search applications with specific criteria.</p>
+                <div style="background: #f8f9fa; padding:20px; border-radius:15px;">
+                    <div class="form-group"><label><i class="fas fa-hashtag"></i> TRN</label><input class="sear" type="text" id="searchTrn" placeholder="Enter TRN"></div>
+                    <div class="form-group"><label><i class="fas fa-passport"></i> Passport</label><input class="sear" type="text" id="searchPassport" placeholder="Passport Number"></div>
+                    <div class="form-group"><label><i class="fas fa-id-card"></i> NID</label><input class="sear" type="text" id="searchNid" placeholder="NID Number"></div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Status</label>
+                        <select class="sear" id="searchStatus">
+                            <option value="">Any Status</option>
+                            <option value="RECEIVED">Received</option>
+                            <option value="PROCESSING">Processing</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
+                    </div>
+                    <button onclick="advancedSearch()" class="login-btn" style="margin-top:10px;"><i class="fas fa-search"></i> Search</button>
+                </div>
+                <div id="searchResults" style="margin-top:25px; display:none;">
+                    <h3>Search Results</h3>
+                    <div class="table-container desktop-only">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>TRN</th>
+                                    <th>Name</th>
+                                    <th>Passport</th>
+                                    <th>Status</th>
+                                    <th>Documents</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="searchResultsBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mobile-cards" id="searchMobileCards"></div>
+                </div>
+            </section>
+            
+            <!-- REPORTS PAGE -->
+            <section id="reports" class="card">
+                <h2><i class="fas fa-chart-bar"></i> Reports</h2>
+                <p class="subtitle">Generate reports and analytics.</p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:15px;">
+                    <div style="background:#f8f9fa; padding:20px; border-radius:15px;">
+                        <h3 style="margin-bottom:10px;">Daily Report</h3>
+                        <p>Applications today: <strong id="dailyCount">0</strong></p>
+                        <button onclick="generateDailyReport()" class="login-btn" style="margin-top:10px;"><i class="fas fa-file-pdf"></i> Generate</button>
+                    </div>
+                    <div style="background:#f8f9fa; padding:20px; border-radius:15px;">
+                        <h3 style="margin-bottom:10px;">Weekly Summary</h3>
+                        <p>Total this week: <strong id="weeklyCount">0</strong></p>
+                        <button onclick="generateWeeklyReport()" class="login-btn" style="margin-top:10px;"><i class="fas fa-file-excel"></i> Export</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- EDIT MODAL (Updated for all info) -->
+            <div id="editModal" style="display:none; margin-top:20px; background:#f8f9fa; padding:20px; border-radius:15px; border:2px solid #ff9933;">
+                <h3 style="margin-bottom:15px;"><i class="fas fa-edit"></i> Update Application Info</h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <label>TRN (Cannot be changed)</label>
+                        <div class="value" id="editTrn" style="background:#eee; padding:10px; border-radius:8px;"></div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Name</label>
+                        <input type="text" id="editName" class="edit-input">
+                    </div>
+                    <div class="detail-item">
+                        <label>Passport Number</label>
+                        <input type="text" id="editPassport" class="edit-input">
+                    </div>
+                    <div class="detail-item">
+                        <label>NID Number</label>
+                        <input type="text" id="editNid" class="edit-input">
+                    </div>
+                    <div class="detail-item">
+                        <label>Email Address</label>
+                        <input type="email" id="editEmail" class="edit-input">
+                    </div>
+                    <div class="detail-item">
+                        <label>Application Status</label>
+                        <select id="editStatus" class="edit-input">
+                            <option value="RECEIVED">RECEIVED</option>
+                            <option value="PROCESSING">PROCESSING</option>
+                            <option value="APPROVED">APPROVED</option>
+                            <option value="REJECTED">REJECTED</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top: 20px;">
+                    <button onclick="updateApplication()" class="login-btn" style="flex:2;"><i class="fas fa-save"></i> Save Changes</button>
+                    <button onclick="cancelEdit()" class="logout-btn" style="flex:1; background:#6c757d;">Cancel</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer><i class="fas fa-lock"></i> Restricted Access | Admin Shahriya Nazim Shuvo</footer>
+        
+    </div>
+    
+    <!-- Firebase Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getDatabase, ref, get, set, child, remove, update, onValue } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzJ_91DnEBqhcpSr45p2KEAlz8wJcwOfY",
+            authDomain: "visawebsite-3bee3.firebaseapp.com",
+            databaseURL: "https://visawebsite-3bee3-default-rtdb.firebaseio.com",
+            projectId: "visawebsite-3bee3",
+            storageBucket: "visawebsite-3bee3.firebasestorage.app",
+            messagingSenderId: "331952961141",
+            appId: "1:331952961141:web:a234f38f086aa3350b6a3c"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        // Global App State
+        const ADMIN_PASSWORD = "01844879708";
+        window.applicationsData = [];
+        window.currentDeleteTrn = null;
+        window.currentDeleteName = null;
+        window.currentUploadTrn = null;
+        window.currentUploadName = null;
+        window.selectedFiles = [];
+        
+        // Real-time Database Listener
+        const appsRef = ref(database, 'applications');
+        onValue(appsRef, (snapshot) => {
+            window.applicationsData = [];
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                for (let key in data) {
+                    window.applicationsData.push({ trn: key, ...data[key] });
+                }
+            }
+            
+            // Sorting Helper
+            const parseDateString = (dateStr) => {
+                if (!dateStr) return 0;
+                const parts = dateStr.split('/');
+                if (parts.length === 3) return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+                return new Date(dateStr).getTime();
+            };
+            
+            window.applicationsData.sort((a, b) => parseDateString(b.date) - parseDateString(a.date));
+            
+            if (document.getElementById('mainApp').style.display === 'block') {
+                window.loadApplicationsUI();
+                if (document.getElementById('applications').classList.contains('active')) {
+                    window.filterApplications();
+                }
+            }
+        });
+        
+        // Login Function
+        window.checkPassword = function() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                window.loadApplicationsUI();
+            } else {
+                window.showErrorPopup('Incorrect password! Please try again.');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        };
+        
+        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') window.checkPassword();
+        });
+        
+        // Popup Controls
+        window.showPopup = function(popupId) { document.getElementById(popupId).style.display = 'flex'; };
+        window.closePopup = function(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+            if (popupId === 'uploadPopup') {
+                window.selectedFiles = [];
+                window.updateFileList();
+                document.getElementById('uploadProgress').style.display = 'none';
+            }
+        };
+        window.showSuccessPopup = function(msg) {
+            document.getElementById('successMessage').innerText = msg || 'Done!';
+            window.showPopup('successPopup');
+        };
+        window.showErrorPopup = function(msg) {
+            document.getElementById('errorMessage').innerText = msg || 'Error!';
+            window.showPopup('errorPopup');
+        };
+        window.showInfoPopup = function(msg, details = null) {
+            document.getElementById('infoMessage').innerText = msg;
+            const infoDet = document.getElementById('infoDetails');
+            if (details) {
+                infoDet.style.display = 'block';
+                infoDet.innerHTML = details;
+            } else { infoDet.style.display = 'none'; }
+            window.showPopup('infoPopup');
+        };
+        window.showLogoutPopup = function() { window.showInfoPopup('Are you sure you want to logout?', '<button onclick="logout()" style="width:100%; padding:12px; background:#dc3545; color:white; border:none; border-radius:8px; font-weight:600;">Yes, Logout</button>'); };
+        
+        // Navigation
+        window.navigate = function(pageId) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById('nav-' + pageId);
+            if (activeBtn) activeBtn.classList.add('active');
+            if (pageId === 'dashboard' || pageId === 'applications') window.loadApplicationsUI();
+        };
+        
+        // UI Renderers
+        window.loadApplicationsUI = function() {
+            const apps = window.applicationsData;
+            document.getElementById('totalApps').innerText = apps.length;
+            document.getElementById('receivedApps').innerText = apps.filter(a => a.status === 'RECEIVED').length;
+            document.getElementById('processingApps').innerText = apps.filter(a => a.status === 'PROCESSING').length;
+            document.getElementById('approvedApps').innerText = apps.filter(a => a.status === 'APPROVED').length;
+            document.getElementById('rejectedApps').innerText = apps.filter(a => a.status === 'REJECTED').length;
+            
+            const today = new Date().toLocaleDateString('en-AU');
+            document.getElementById('dailyCount').innerText = apps.filter(a => a.date === today).length;
+            
+            renderTableRows('recentTableBody', apps.slice(0, 5));
+            renderMobileCards('recentMobileCards', apps.slice(0, 5));
+            renderTableRows('tableBody', apps);
+            renderMobileCards('mobileCardsContainer', apps);
+        };
+        
+        function renderTableRows(tbodyId, appsArray) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            appsArray.forEach(app => {
+                const docCount = app.documents ? app.documents.length : 0;
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                <td><strong>${app.trn}</strong></td>
+                <td>${app.name}</td>
+                <td>${app.passport}</td>
+                ${tbodyId === 'tableBody' ? `<td>${app.email || 'N/A'}</td>` : ''}
+                <td>${app.date}</td>
+                <td><span class="status-badge ${app.status.toLowerCase()}">${app.status}</span></td>
+                <td>
+                    <i class="fas fa-file document-icon" onclick="viewDocuments('${app.trn}')" title="View Documents"></i>
+                    ${docCount > 0 ? `<span style="color:#ff9933; font-weight:600;">(${docCount})</span>` : ''}
+                </td>
+                <td>
+                    <button class="action-btn" onclick="showUploadPopup('${app.trn}', '${app.name}')"><i class="fas fa-cloud-upload-alt"></i></button>
+                    <button class="action-btn" onclick="editApplication('${app.trn}')"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete" onclick="showDeletePopup('${app.trn}', '${app.name}', '${app.passport}', '${app.date}')"><i class="fas fa-trash"></i></button>
+                    ${tbodyId === 'tableBody' ? `<button class="action-btn" onclick="viewDetails('${app.trn}')"><i class="fas fa-eye"></i></button>` : ''}
+                </td>`;
+            });
+        }
+        
+        function renderMobileCards(containerId, appsArray) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            appsArray.forEach(app => {
+                const docCount = app.documents ? app.documents.length : 0;
+                container.innerHTML += `
+                <div class="mobile-card">
+                    <div class="mobile-card-header">
+                        <span class="trn"><i class="fas fa-hashtag"></i> ${app.trn}</span>
+                        <span class="status-badge ${app.status.toLowerCase()}">${app.status}</span>
+                    </div>
+                    <div class="mobile-card-row"><span class="label">Name:</span><span class="value">${app.name}</span></div>
+                    <div class="mobile-card-row"><span class="label">Passport:</span><span class="value">${app.passport}</span></div>
+                    <div class="mobile-card-actions">
+                        <button class="mobile-upload" onclick="showUploadPopup('${app.trn}', '${app.name}')"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+                        <button class="mobile-edit" onclick="editApplication('${app.trn}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="mobile-delete" onclick="showDeletePopup('${app.trn}', '${app.name}', '${app.passport}', '${app.date}')"><i class="fas fa-trash"></i> Delete</button>
+                        <button class="mobile-view" onclick="viewDetails('${app.trn}')"><i class="fas fa-eye"></i> View</button>
+                    </div>
+                </div>`;
+            });
+        }
+        
+        // --- EDIT & UPDATE LOGIC (MODIFIED) ---
+        window.editApplication = function(trn) {
+            const data = window.applicationsData.find(a => a.trn === trn);
+            if (data) {
+                document.getElementById('editTrn').innerText = trn;
+                document.getElementById('editName').value = data.name || '';
+                document.getElementById('editPassport').value = data.passport || '';
+                document.getElementById('editNid').value = data.nid || '';
+                document.getElementById('editEmail').value = data.email || '';
+                document.getElementById('editStatus').value = data.status || 'RECEIVED';
+                
+                document.getElementById('editModal').style.display = 'block';
+                document.getElementById('editModal').scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+        
+        window.updateApplication = function() {
+            const trn = document.getElementById('editTrn').innerText;
+            const updatedData = {
+                name: document.getElementById('editName').value,
+                passport: document.getElementById('editPassport').value,
+                nid: document.getElementById('editNid').value,
+                email: document.getElementById('editEmail').value,
+                status: document.getElementById('editStatus').value,
+                lastUpdated: new Date().toLocaleString()
+            };
+            
+            update(ref(database, 'applications/' + trn), updatedData)
+            .then(() => {
+                window.showSuccessPopup('Application updated successfully!');
+                document.getElementById('editModal').style.display = 'none';
+            }).catch(err => window.showErrorPopup('Update failed: ' + err.message));
+        };
+        
+        window.cancelEdit = function() { document.getElementById('editModal').style.display = 'none'; };
+        
+        // --- DELETE, UPLOAD, SEARCH & OTHER FUNCTIONS (SAME AS BEFORE) ---
+        window.showDeletePopup = function(trn, name, passport, date) {
+            window.currentDeleteTrn = trn;
+            window.currentDeleteName = name;
+            document.getElementById('deleteDetails').innerHTML = `
+            <div class="popup-details-item"><span class="label">TRN:</span><span class="value">${trn}</span></div>
+            <div class="popup-details-item"><span class="label">Name:</span><span class="value">${name}</span></div>
+            <div class="popup-details-item"><span class="label">Passport:</span><span class="value">${passport}</span></div>`;
+            window.showPopup('deletePopup');
+        };
+        
+        window.confirmDelete = function() {
+            if (window.currentDeleteTrn) {
+                remove(ref(database, 'applications/' + window.currentDeleteTrn)).then(() => {
+                    window.closePopup('deletePopup');
+                    window.showSuccessPopup(`${window.currentDeleteName}'s application deleted.`);
+                });
+            }
+        };
+
+        window.showUploadPopup = function(trn, name) {
+            window.currentUploadTrn = trn;
+            window.currentUploadName = name;
+            document.getElementById('uploadTrn').innerText = trn;
+            document.getElementById('uploadApplicantName').innerText = `Upload for: ${name}`;
+            const data = window.applicationsData.find(a => a.trn === trn);
+            window.selectedFiles = (data && data.documents) ? [...data.documents] : [];
+            window.updateFileList();
+            window.updateDocumentPreview();
+            window.showPopup('uploadPopup');
+        };
+
+        window.handleFileSelect = function(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                if (file.size > 5 * 1024 * 1024) return window.showErrorPopup('File too large (Max 5MB)');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    window.selectedFiles.push({ name: file.name, size: file.size, type: file.type, data: e.target.result, uploadedAt: new Date().toLocaleString() });
+                    window.updateFileList(); window.updateDocumentPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+            event.target.value = '';
+        };
+
+        window.updateFileList = function() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            window.selectedFiles.forEach((file, index) => {
+                fileList.innerHTML += `<div class="file-item"><div class="file-info"><span>${file.name}</span></div><div class="file-remove" onclick="removeFile(${index})"><i class="fas fa-times"></i></div></div>`;
+            });
+        };
+
+        window.updateDocumentPreview = function() {
+            const preview = document.getElementById('documentPreview');
+            preview.innerHTML = '';
+            window.selectedFiles.slice(0, 4).forEach(file => {
+                if (file.type.includes('image')) preview.innerHTML += `<div class="preview-item"><img src="${file.data}"></div>`;
+                else preview.innerHTML += `<div class="preview-item"><div class="preview-pdf"><i class="fas fa-file-pdf"></i></div></div>`;
+            });
+        };
+
+        window.removeFile = function(index) { window.selectedFiles.splice(index, 1); window.updateFileList(); window.updateDocumentPreview(); };
+
+        window.saveUploadedFiles = function() {
+            if (!window.currentUploadTrn) return;
+            document.getElementById('uploadProgress').style.display = 'block';
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 25;
+                document.getElementById('uploadProgressBar').style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    update(ref(database, 'applications/' + window.currentUploadTrn), { documents: window.selectedFiles })
+                        .then(() => {
+                            window.closePopup('uploadPopup');
+                            window.showSuccessPopup('Documents Saved!');
+                        });
+                }
+            }, 200);
+        };
+
+        window.viewDocuments = function(trn) {
+            const data = window.applicationsData.find(a => a.trn === trn);
+            if (data && data.documents && data.documents.length > 0) {
+                let html = '<div style="max-height:200px; overflow-y:auto;">';
+                data.documents.forEach(doc => html += `<div style="padding:5px; border-bottom:1px solid #eee;">${doc.name}</div>`);
+                html += '</div>';
+                window.showInfoPopup(`Documents: ${data.name}`, html);
+            } else window.showInfoPopup('No documents uploaded.');
+        };
+
+        window.filterApplications = function() {
+            const term = document.getElementById('appSearch').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const s = row.querySelector('.status-badge').textContent.trim();
+                row.style.display = (text.includes(term) && (!status || s === status)) ? '' : 'none';
+            });
+        };
+
+        window.viewDetails = function(trn) {
+            const data = window.applicationsData.find(a => a.trn === trn);
+            if (data) {
+                const details = `
+                <div class="popup-details-item"><span class="label">Name:</span><span class="value">${data.name}</span></div>
+                <div class="popup-details-item"><span class="label">Passport:</span><span class="value">${data.passport}</span></div>
+                <div class="popup-details-item"><span class="label">NID:</span><span class="value">${data.nid || 'N/A'}</span></div>
+                <div class="popup-details-item"><span class="label">Email:</span><span class="value">${data.email || 'N/A'}</span></div>
+                <div class="popup-details-item"><span class="label">Status:</span><span class="value">${data.status}</span></div>`;
+                window.showInfoPopup('Full Details', details);
+            }
+        };
+
+        window.advancedSearch = function() {
+            const trn = document.getElementById('searchTrn').value;
+            const results = window.applicationsData.filter(d => !trn || d.trn.includes(trn));
+            renderTableRows('searchResultsBody', results);
+            document.getElementById('searchResults').style.display = 'block';
+        };
+
+        window.generateDailyReport = function() { window.showSuccessPopup('Daily Report Generated!'); };
+        window.generateWeeklyReport = function() { window.showSuccessPopup('Weekly Summary Exported!'); };
+        window.logout = function() { location.reload(); };
+
+    </script>
+</body>
+</html>
